@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import {lazy, Suspense} from 'react';
 import './App.css';
+import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
+import {CssBaseline} from "@mui/material";
+import {ThemeProvider} from '@mui/material/styles';
+import {theme} from "./assets/theme"
+import Container from "./components/core/Container";
+const PostsPage=lazy(() => import("./pages/PostsPage"))
+const SinglePostPage=lazy(() => import("./pages/SinglePostPage"))
+
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div >
+            <ThemeProvider theme={theme}>
+              <CssBaseline/>
+              <Suspense fallback={null}>
+                <BrowserRouter>
+                  <Routes>
+                      <Route element={<Container/>}>
+                          <Route index element={<PostsPage/>}/>
+                          <Route path={"/:postId"} element={<SinglePostPage/>}/>
+                          <Route
+                              path="*"
+                              element={<Navigate to="/" replace/>}
+                          />
+                      </Route>
+
+                  </Routes>
+                </BrowserRouter>
+              </Suspense>
+            </ThemeProvider>
+      </div>
   );
 }
+
+
 
 export default App;
